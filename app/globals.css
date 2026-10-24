@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --surface: #faf6ee;
+  --card: #ffffff;
+  --ink: #10302f;
+  --muted: #5b7371;
+  --line: #e5dfd0;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --surface: #0b1f1e;
+    --card: #12302e;
+    --ink: #eaf3f1;
+    --muted: #9bb5b1;
+    --line: #1f4542;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-sans: var(--font-inter), var(--font-sinhala), var(--font-tamil),
+    system-ui, sans-serif;
+}
+
+@theme {
+  --color-ocean-50: #ecfeff;
+  --color-ocean-100: #cffafe;
+  --color-ocean-500: #14b8a6;
+  --color-ocean-600: #0d9488;
+  --color-ocean-700: #0f766e;
+  --color-ocean-800: #115e59;
+  --color-tea-400: #86c06a;
+  --color-tea-500: #5fa84a;
+  --color-gold-400: #f5c04a;
+  --color-gold-500: #e8a317;
 }

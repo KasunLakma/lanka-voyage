@@ -1,0 +1,50 @@
+{
+    "meta": {
+        "title": "Lanka Voyage – Discover Sri Lanka",
+        "description": "Destinations, stays, vehicles, guides, maps and videos for your Sri Lanka trip."
+    },
+    "nav": {
+        "destinations": "Destinations",
+        "upcoming": "Upcoming",
+        "articles": "Articles",
+        "directory": "Directory",
+        "map": "Map",
+        "videos": "Videos",
+        "pricing": "Pricing",
+        "login": "Log in",
+        "register": "Sign up"
+    },
+    "hero": {
+        "title": "Discover the Pearl of the Indian Ocean",
+        "subtitle": "Beaches, mountains, culture and wildlife — everything for your Sri Lanka trip in one place.",
+        "searchPlaceholder": "Where do you want to go?",
+        "searchButton": "Search"
+    },
+    "categories": {
+        "title": "What are you looking for?",
+        "beaches": "Beaches",
+        "hillCountry": "Hill Country",
+        "culture": "Culture",
+        "wildlife": "Wildlife",
+        "waterfalls": "Waterfalls & Lakes",
+        "food": "Food",
+        "nightlife": "Nightlife",
+        "wellness": "Wellness",
+        "adventure": "Adventure",
+        "festivals": "Festivals"
+    },
+    "sections": {
+        "featuredDestinations": "Featured destinations",
+        "featuredVideos": "Trending videos",
+        "latestArticles": "Latest articles",
+        "comingSoon": "Coming soon"
+    },
+    "placeholder": {
+        "comingSoon": "This page is coming soon.",
+        "backHome": "Back to home"
+    },
+    "footer": {
+        "tagline": "Your trusted guide to Sri Lanka",
+        "rights": "All rights reserved."
+    }
+}

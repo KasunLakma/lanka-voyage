@@ -1,0 +1,50 @@
+{
+    "meta": {
+        "title": "Lanka Voyage – ශ්‍රී ලංකාව සොයා යන්න",
+        "description": "ඔබේ ශ්‍රී ලංකා ගමනට ගමනාන්ත, නවාතැන්, වාහන, මගපෙන්වන්නන්, සිතියම් සහ වීඩියෝ."
+    },
+    "nav": {
+        "destinations": "ගමනාන්ත",
+        "upcoming": "ඉදිරි ගමනාන්ත",
+        "articles": "ලිපි",
+        "directory": "නාමාවලිය",
+        "map": "සිතියම",
+        "videos": "වීඩියෝ",
+        "pricing": "මිල ගණන්",
+        "login": "ඇතුල් වන්න",
+        "register": "ලියාපදිංචි වන්න"
+    },
+    "hero": {
+        "title": "ඉන්දියන් සාගරයේ මුතුඑළ සොයා යන්න",
+        "subtitle": "වෙරළ, කඳු, සංස්කෘතිය, වනජීවී — ඔබේ ලංකා ගමනට අවශ්‍ය සියල්ල එක තැනකින්.",
+        "searchPlaceholder": "කොහේ යන්නද?",
+        "searchButton": "සොයන්න"
+    },
+    "categories": {
+        "title": "ඔබ සොයන්නේ කුමක්ද?",
+        "beaches": "වෙරළ",
+        "hillCountry": "කඳුකරය",
+        "culture": "සංස්කෘතිය",
+        "wildlife": "වනජීවී",
+        "waterfalls": "දිය ඇල්ල සහ වැව්",
+        "food": "ආහාර",
+        "nightlife": "රාත්‍රී ජීවිතය",
+        "wellness": "සුවතාව",
+        "adventure": "වික්‍රමාන්විත ක්‍රීඩා",
+        "festivals": "උත්සව"
+    },
+    "sections": {
+        "featuredDestinations": "විශේෂිත ගමනාන්ත",
+        "featuredVideos": "ජනප්‍රිය වීඩියෝ",
+        "latestArticles": "නවතම ලිපි",
+        "comingSoon": "ඉක්මනින් එනවා"
+    },
+    "placeholder": {
+        "comingSoon": "මෙම පිටුව ඉක්මනින් එනවා.",
+        "backHome": "මුල් පිටුවට"
+    },
+    "footer": {
+        "tagline": "ශ්‍රී ලංකාව ගැන ඔබේ විශ්වාසදායී මග පෙන්වන්නා",
+        "rights": "සියලු හිමිකම් ඇවිරිණි."
+    }
+}
