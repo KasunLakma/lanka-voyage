@@ -1,74 +1,59 @@
-import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
 import SectionTitle from "@/components/ui/SectionTitle";
-import { Button } from "@/components/ui/Button";
-
-const CATEGORIES = [
-    { key: "beaches", icon: "🏖️" },
-    { key: "hillCountry", icon: "⛰️" },
-    { key: "culture", icon: "🛕" },
-    { key: "wildlife", icon: "🐘" },
-    { key: "waterfalls", icon: "💧" },
-    { key: "food", icon: "🍛" },
-    { key: "nightlife", icon: "🌙" },
-    { key: "wellness", icon: "🧘" },
-    { key: "adventure", icon: "🏄" },
-    { key: "festivals", icon: "🎉" },
-] as const;
-
-const PLACEHOLDER_SECTIONS = [
-    "featuredDestinations",
-    "featuredVideos",
-    "latestArticles",
-] as const;
+import { Link } from "@/i18n/navigation";
+import { buttonStyles } from "@/components/ui/Button";
+import HeroDestinations from "@/components/home/HeroDestinations";
+import DestinationExplorer from "@/components/home/DestinationExplorer";
+import { COMMUNITY_TEXT, type Locale3 } from "@/data/destinations";
 
 export default function HomePage() {
-    const t = useTranslations("hero");
-    const tc = useTranslations("categories");
     const ts = useTranslations("sections");
+    const tn = useTranslations("nav");
+    const locale = useLocale() as Locale3;
+    const community = COMMUNITY_TEXT[locale];
 
     return (
         <>
-            <section className="bg-linear-to-br from-ocean-800 via-ocean-600 to-tea-500 py-20 text-white sm:py-28">
-                <Container className="text-center">
-                    <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-                        {t("title")}
-                    </h1>
-                    <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90">
-                        {t("subtitle")}
-                    </p>
+            <HeroDestinations />
 
-                    <div className="mx-auto mt-8 flex max-w-xl flex-col gap-2 rounded-3xl bg-white p-2 sm:flex-row sm:rounded-full">
-                        <input
-                            type="text"
-                            placeholder={t("searchPlaceholder")}
-                            className="flex-1 rounded-full px-5 py-3 text-base text-slate-800 outline-none"
-                        />
-                        <Button className="bg-gold-500! hover:bg-gold-400! text-slate-900!">
-                            {t("searchButton")}
-                        </Button>
-                    </div>
-                </Container>
-            </section>
+            {/* Destination cards with category tabs */}
+            <Container className="mt-14">
+                <SectionTitle title={ts("featuredDestinations")} />
+                <DestinationExplorer />
+            </Container>
 
-            <Container className="mt-12">
-                <SectionTitle title={tc("title")} />
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                    {CATEGORIES.map((c) => (
-                        <Card
-                            key={c.key}
-                            className="flex flex-col items-center gap-2 p-5 text-center transition hover:-translate-y-1 hover:shadow-md"
+            {/* Community banner */}
+            <Container className="mt-16">
+                <div className="relative flex min-h-80 items-end overflow-hidden rounded-3xl p-8 text-white sm:p-12">
+                    <Image
+                        src="/images/ella.jpg"
+                        alt=""
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-r from-black/70 to-black/10" />
+                    <div className="relative max-w-xl">
+                        <h2 className="text-4xl font-extrabold sm:text-6xl">
+                            {community.title}
+                        </h2>
+                        <p className="mt-3 text-lg text-white/90">{community.sub}</p>
+                        <Link
+                            href="/register"
+                            className={`${buttonStyles("primary")} mt-6 bg-white! text-slate-900!`}
                         >
-                            <span className="text-4xl">{c.icon}</span>
-                            <span className="text-sm font-semibold">{tc(c.key)}</span>
-                        </Card>
-                    ))}
+                            {tn("register")}
+                        </Link>
+                    </div>
                 </div>
             </Container>
 
-            {PLACEHOLDER_SECTIONS.map((s) => (
-                <Container key={s} className="mt-12">
+            {/* Videos and articles (coming soon) */}
+            {(["featuredVideos", "latestArticles"] as const).map((s) => (
+                <Container key={s} className="mt-14">
                     <SectionTitle title={ts(s)} />
                     <div className="grid gap-4 sm:grid-cols-3">
                         {[1, 2, 3].map((n) => (

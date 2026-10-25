@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import MobileTabBar from "@/components/layout/MobileTabBar";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -43,8 +44,9 @@ export default async function LocaleLayout({
             <body className="min-h-screen bg-surface text-ink antialiased">
                 <NextIntlClientProvider>
                     <Header />
-                    <main>{children}</main>
+                    <main className="pb-24 lg:pb-0">{children}</main>
                     <Footer />
+                    <MobileTabBar />
                 </NextIntlClientProvider>
             </body>
         </html>
