@@ -32,8 +32,8 @@ export default function DestinationExplorer() {
                         key={c.key}
                         onClick={() => setTab(tab === c.key ? null : c.key)}
                         className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${tab === c.key
-                                ? "bg-ocean-600 text-white"
-                                : "text-muted hover:bg-ocean-50 hover:text-ocean-700"
+                            ? "bg-ocean-600 text-white"
+                            : "text-muted hover:bg-ocean-50 hover:text-ocean-700"
                             }`}
                     >
                         <span>{c.icon}</span>
@@ -47,7 +47,7 @@ export default function DestinationExplorer() {
                 {list.map((d) => (
                     <Link
                         key={d.slug}
-                        href="/destinations"
+                        href={`/destinations/${d.slug}`}
                         className="group relative block aspect-4/5 overflow-hidden rounded-3xl"
                     >
                         <Image
