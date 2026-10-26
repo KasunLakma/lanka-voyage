@@ -50,7 +50,12 @@ export default function AuthButton() {
 
     return (
         <div className="hidden items-center gap-2 sm:flex">
-            <span className="max-w-32 truncate text-sm font-semibold">{name}</span>
+            <Link
+                href="/provider"
+                className="max-w-32 truncate text-sm font-semibold hover:text-ocean-600"
+            >
+                {name}
+            </Link>
             <button onClick={logout} className={buttonStyles("outline")}>
                 {text.logout}
             </button>
