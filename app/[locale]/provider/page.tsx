@@ -49,7 +49,7 @@ export default async function ProviderPage({
 
     const { data: mine } = await supabase
         .from("listings")
-        .select("id,name,category,district,status")
+        .select("id,name,category,district,status,review_note")
         .eq("owner_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -88,6 +88,11 @@ export default async function ProviderPage({
                                     <p className="text-sm text-muted">
                                         {cat?.icon} {cat?.label[locale]} · {l.district}
                                     </p>
+                                    {l.status === "rejected" && l.review_note && (
+                                        <p className="mt-1 text-sm text-red-700">
+                                            📝 {l.review_note}
+                                        </p>
+                                    )}
                                 </div>
                                 <span
                                     className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyle[status]}`}
