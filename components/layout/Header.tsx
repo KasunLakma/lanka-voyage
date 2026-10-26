@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import Container from "@/components/ui/Container";
 import { buttonStyles } from "@/components/ui/Button";
 import LanguageSwitcher from "./LanguageSwitcher";
+import AuthButton from "@/components/auth/AuthButton";
 
 const NAV_ITEMS = [
     "destinations",
@@ -42,12 +43,7 @@ export default function Header() {
 
                 <div className="flex items-center gap-2">
                     <LanguageSwitcher />
-                    <Link
-                        href="/login"
-                        className={`${buttonStyles("primary")} hidden sm:inline-flex`}
-                    >
-                        {t("login")}
-                    </Link>
+                    <AuthButton />
                     <button
                         className="rounded-lg border border-line bg-card px-3 py-2 lg:hidden"
                         onClick={() => setOpen(!open)}
