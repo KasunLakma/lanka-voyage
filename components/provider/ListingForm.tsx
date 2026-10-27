@@ -7,8 +7,10 @@ import { createClient } from "@/lib/supabase/client";
 import { resizeImage } from "@/lib/images";
 import { CATEGORIES, DISTRICTS, LIST_TEXT } from "@/data/listingText";
 import { PHOTO_TEXT } from "@/data/photoText";
+import { MAP_TEXT } from "@/data/mapText";
 import type { Locale3 } from "@/data/destinations";
 import { buttonStyles } from "@/components/ui/Button";
+import LocationPicker, { type LatLng } from "@/components/map/LocationPicker";
 
 const inputClass =
     "w-full rounded-xl border border-line bg-surface px-4 py-3 outline-none focus:border-ocean-500";
@@ -17,6 +19,7 @@ export default function ListingForm() {
     const locale = useLocale() as Locale3;
     const t = LIST_TEXT[locale];
     const p = PHOTO_TEXT[locale];
+    const m = MAP_TEXT[locale];
     const router = useRouter();
 
     const [category, setCategory] = useState("");
@@ -26,6 +29,7 @@ export default function ListingForm() {
     const [phone, setPhone] = useState("");
     const [whatsapp, setWhatsapp] = useState(false);
     const [sltda, setSltda] = useState("");
+    const [location, setLocation] = useState<LatLng | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState("");
     const [loading, setLoading] = useState(false);
@@ -96,10 +100,11 @@ export default function ListingForm() {
             whatsapp,
             sltda_number: sltda.trim() || null,
             image_path: imagePath,
+            lat: location?.lat ?? null,
+            lng: location?.lng ?? null,
         });
 
         if (err) {
-            // Remove the photo again if the listing could not be saved
             if (imagePath) {
                 await supabase.storage.from("listing-images").remove([imagePath]);
             }
@@ -199,17 +204,19 @@ export default function ListingForm() {
                 className={inputClass}
             />
 
+            {/* Location on the map */}
+            <div>
+                <p className="mb-2 text-sm font-medium">{m.locationLabel}</p>
+                <LocationPicker value={location} onChange={setLocation} labels={m} />
+            </div>
+
             {/* Cover photo */}
             <div>
                 <p className="mb-2 text-sm font-medium">{p.label}</p>
                 {preview ? (
                     <div className="relative overflow-hidden rounded-2xl">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={preview}
-                            alt=""
-                            className="h-48 w-full object-cover"
-                        />
+                        <img src={preview} alt="" className="h-48 w-full object-cover" />
                         <button
                             type="button"
                             onClick={removeFile}
