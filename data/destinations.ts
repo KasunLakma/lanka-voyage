@@ -5,7 +5,7 @@ type L3 = { en: string; si: string; ta: string };
 export const DESTINATIONS = [
     {
         slug: "sigiriya",
-        image: "/images/sigiriya.webp",
+        image: "/images/sigiriya.jpg",
         category: "culture",
         name: { en: "Sigiriya", si: "සීගිරිය", ta: "சிகிரியா" },
     },

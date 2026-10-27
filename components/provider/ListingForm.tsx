@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { resizeImage } from "@/lib/images";
 import { CATEGORIES, DISTRICTS, LIST_TEXT } from "@/data/listingText";
+import { PHOTO_TEXT } from "@/data/photoText";
 import type { Locale3 } from "@/data/destinations";
 import { buttonStyles } from "@/components/ui/Button";
 
@@ -14,6 +16,7 @@ const inputClass =
 export default function ListingForm() {
     const locale = useLocale() as Locale3;
     const t = LIST_TEXT[locale];
+    const p = PHOTO_TEXT[locale];
     const router = useRouter();
 
     const [category, setCategory] = useState("");
@@ -23,8 +26,27 @@ export default function ListingForm() {
     const [phone, setPhone] = useState("");
     const [whatsapp, setWhatsapp] = useState(false);
     const [sltda, setSltda] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+        const chosen = e.target.files?.[0];
+        if (!chosen) return;
+        if (!chosen.type.startsWith("image/") || chosen.size > 15 * 1024 * 1024) {
+            setError(p.notImage);
+            return;
+        }
+        setError("");
+        setFile(chosen);
+        setPreview(URL.createObjectURL(chosen));
+    }
+
+    function removeFile() {
+        setFile(null);
+        setPreview("");
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -42,6 +64,28 @@ export default function ListingForm() {
             return;
         }
 
+        // 1) Upload the photo (if any)
+        let imagePath: string | null = null;
+        if (file) {
+            try {
+                const blob = await resizeImage(file);
+                imagePath = `${user.id}/${crypto.randomUUID()}.jpg`;
+                const { error: upErr } = await supabase.storage
+                    .from("listing-images")
+                    .upload(imagePath, blob, { contentType: "image/jpeg" });
+                if (upErr) {
+                    setError(`${p.failed} (${upErr.message})`);
+                    setLoading(false);
+                    return;
+                }
+            } catch {
+                setError(p.failed);
+                setLoading(false);
+                return;
+            }
+        }
+
+        // 2) Save the listing
         const { error: err } = await supabase.from("listings").insert({
             owner_id: user.id,
             category,
@@ -51,9 +95,14 @@ export default function ListingForm() {
             phone: phone.trim(),
             whatsapp,
             sltda_number: sltda.trim() || null,
+            image_path: imagePath,
         });
 
         if (err) {
+            // Remove the photo again if the listing could not be saved
+            if (imagePath) {
+                await supabase.storage.from("listing-images").remove([imagePath]);
+            }
             setError(`${t.saveFailed} (${err.message})`);
             setLoading(false);
         } else {
@@ -149,6 +198,36 @@ export default function ListingForm() {
                 onChange={(e) => setSltda(e.target.value)}
                 className={inputClass}
             />
+
+            {/* Cover photo */}
+            <div>
+                <p className="mb-2 text-sm font-medium">{p.label}</p>
+                {preview ? (
+                    <div className="relative overflow-hidden rounded-2xl">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={preview}
+                            alt=""
+                            className="h-48 w-full object-cover"
+                        />
+                        <button
+                            type="button"
+                            onClick={removeFile}
+                            className="absolute right-2 top-2 rounded-full bg-black/60 px-3 py-1 text-xs text-white"
+                        >
+                            ✕ {p.remove}
+                        </button>
+                    </div>
+                ) : (
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={handleFile}
+                        className="w-full rounded-xl border border-dashed border-line bg-surface px-4 py-6 text-sm"
+                    />
+                )}
+                <p className="mt-1 text-xs text-muted">{p.hint}</p>
+            </div>
 
             {error && (
                 <p className="rounded-xl bg-red-100 px-4 py-3 text-sm text-red-700">

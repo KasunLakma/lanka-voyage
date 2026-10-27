@@ -21,7 +21,9 @@ export default async function DirectoryPage({
     const supabase = await createClient();
     let query = supabase
         .from("listings")
-        .select("id,name,category,district,description,phone,whatsapp,verified")
+        .select(
+            "id,name,category,district,description,phone,whatsapp,verified,image_path",
+        )
         .eq("status", "published")
         .order("created_at", { ascending: false });
 

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ADMIN_TEXT } from "@/data/adminText";
 import { CATEGORIES, LIST_TEXT } from "@/data/listingText";
 import type { Locale3 } from "@/data/destinations";
+import { listingImageUrl } from "@/lib/images";
 
 const STATUSES = ["pending", "published", "rejected"] as const;
 
@@ -56,7 +57,7 @@ export default async function AdminPage({
     const { data: items } = await supabase
         .from("listings")
         .select(
-            "id,name,category,district,description,phone,whatsapp,sltda_number,status,verified,review_note,created_at",
+            "id,name,category,district,description,phone,whatsapp,sltda_number,status,verified,review_note,created_at,image_path",
         )
         .eq("status", status)
         .order("created_at", { ascending: false });
@@ -113,7 +114,14 @@ export default async function AdminPage({
                                     </p>
                                 </div>
 
-                                <p className="mt-3 text-sm">{l.description}</p>
+                                {l.image_path && (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={listingImageUrl(l.image_path)}
+                                        alt={l.name}
+                                        className="mt-3 h-56 w-full rounded-2xl object-cover"
+                                    />
+                                )}
                                 <p className="mt-2 text-sm">
                                     📞 {l.phone}
                                     {l.whatsapp ? " · WhatsApp" : ""}
