@@ -8,6 +8,7 @@ import { DISTRICTS } from "@/data/listingText";
 import { VIDEO_CATEGORIES, VIDEO_TEXT } from "@/data/videoText";
 import type { Locale3 } from "@/data/destinations";
 import { buttonStyles } from "@/components/ui/Button";
+import { PLAN_TEXT } from "@/data/planText";
 
 const inputClass =
     "w-full rounded-xl border border-line bg-surface px-4 py-3 outline-none focus:border-ocean-500";
@@ -58,7 +59,13 @@ export default function VideoForm() {
         });
 
         if (err) {
-            setError(err.code === "23505" ? t.duplicate : `${t.saveFailed} (${err.message})`);
+            setError(
+                err.code === "23505"
+                    ? t.duplicate
+                    : err.code === "42501"
+                        ? PLAN_TEXT[locale].limitReached
+                        : `${t.saveFailed} (${err.message})`,
+            );
         } else {
             setDone(true);
             setUrl("");

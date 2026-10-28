@@ -51,7 +51,7 @@ export default function AuthButton() {
     return (
         <div className="hidden items-center gap-2 sm:flex">
             <Link
-                href="/provider"
+                href="/account"
                 className="max-w-32 truncate text-sm font-semibold hover:text-ocean-600"
             >
                 {name}

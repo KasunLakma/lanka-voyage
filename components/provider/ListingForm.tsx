@@ -11,6 +11,7 @@ import { MAP_TEXT } from "@/data/mapText";
 import type { Locale3 } from "@/data/destinations";
 import { buttonStyles } from "@/components/ui/Button";
 import LocationPicker, { type LatLng } from "@/components/map/LocationPicker";
+import { PLAN_TEXT } from "@/data/planText";
 
 const inputClass =
     "w-full rounded-xl border border-line bg-surface px-4 py-3 outline-none focus:border-ocean-500";
@@ -108,7 +109,11 @@ export default function ListingForm() {
             if (imagePath) {
                 await supabase.storage.from("listing-images").remove([imagePath]);
             }
-            setError(`${t.saveFailed} (${err.message})`);
+            setError(
+                err.code === "42501"
+                    ? PLAN_TEXT[locale].limitReached
+                    : `${t.saveFailed} (${err.message})`,
+            );
             setLoading(false);
         } else {
             router.push("/provider");
