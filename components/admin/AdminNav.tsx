@@ -5,9 +5,9 @@ import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale3 } from "@/data/destinations";
 
 const LABELS = {
-    en: ["Listings", "Videos", "Articles", "Payments", "Upcoming"],
-    si: ["ලැයිස්තු", "වීඩියෝ", "ලිපි", "ගෙවීම්", "ඉදිරි ගමනාන්ත"],
-    ta: ["பட்டியல்கள்", "காணொளிகள்", "கட்டுரைகள்", "கட்டணங்கள்", "வரவிருப்பவை"],
+    en: ["Listings", "Videos", "Articles", "Payments", "Upcoming", "Reports"],
+    si: ["ලැයිස්තු", "වීඩියෝ", "ලිපි", "ගෙවීම්", "ඉදිරි ගමනාන්ත", "වාර්තා"],
+    ta: ["பட்டியல்கள்", "காணொளிகள்", "கட்டுரைகள்", "கட்டணங்கள்", "வரவிருப்பவை", "புகார்கள்"],
 } as const;
 
 const LINKS = [
@@ -16,6 +16,7 @@ const LINKS = [
     { href: "/admin/articles", icon: "📝" },
     { href: "/admin/payments", icon: "💳" },
     { href: "/admin/upcoming", icon: "🗓️" },
+    { href: "/admin/reports", icon: "🚩" },
 ];
 
 export default function AdminNav() {

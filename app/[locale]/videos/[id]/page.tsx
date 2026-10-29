@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { youtubeEmbed } from "@/lib/youtube";
 import { VIDEO_CATEGORIES, VIDEO_TEXT } from "@/data/videoText";
 import type { Locale3 } from "@/data/destinations";
+import ReportButton from "@/components/reviews/ReportButton";
 
 export default async function VideoPage({
     params,
@@ -56,6 +57,9 @@ export default async function VideoPage({
                     {video.description}
                 </p>
             )}
+            <div className="mt-8">
+                <ReportButton targetType="video" targetId={id} />
+            </div>
         </Container>
     );
 }

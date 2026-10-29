@@ -7,6 +7,7 @@ import { listingImageUrl } from "@/lib/images";
 import { CATEGORIES, LIST_TEXT } from "@/data/listingText";
 import { REVIEW_TEXT } from "@/data/reviewText";
 import type { Locale3 } from "@/data/destinations";
+import ReportButton from "@/components/reviews/ReportButton";
 
 export default async function ListingPage({
     params,
@@ -111,6 +112,7 @@ export default async function ListingPage({
                         </a>
                     )}
                 </div>
+                <ReportButton targetType="listing" targetId={l.id} />
 
                 <ReviewsSection
                     targetType="listing"

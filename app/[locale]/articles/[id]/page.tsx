@@ -6,6 +6,7 @@ import { listingImageUrl } from "@/lib/images";
 import { ARTICLE_TEXT, ARTICLE_LANGS } from "@/data/articleText";
 import { VIDEO_CATEGORIES } from "@/data/videoText";
 import type { Locale3 } from "@/data/destinations";
+import ReportButton from "@/components/reviews/ReportButton";
 
 export default async function ArticlePage({
     params,
@@ -80,6 +81,9 @@ export default async function ArticlePage({
                             {p}
                         </p>
                     ))}
+                </div>
+                <div className="mt-8">
+                    <ReportButton targetType="article" targetId={id} />
                 </div>
             </Container>
         </article>

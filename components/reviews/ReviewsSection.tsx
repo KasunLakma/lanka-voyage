@@ -5,6 +5,7 @@ import type { Locale3 } from "@/data/destinations";
 import Stars from "./Stars";
 import ReviewForm from "./ReviewForm";
 import ReviewActions from "./ReviewActions";
+import ReportButton from "./ReportButton";
 
 // Reviews list + "write a review" form for a listing or a destination
 export default async function ReviewsSection({
@@ -110,6 +111,9 @@ export default async function ReviewsSection({
                             isAdmin={isAdmin}
                             status={r.status}
                         />
+                        {user?.id !== r.author_id && r.status === "published" && (
+                            <ReportButton targetType="review" targetId={r.id} />
+                        )}
                     </div>
                 ))}
             </div>
