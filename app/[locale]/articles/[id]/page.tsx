@@ -29,7 +29,7 @@ export default async function ArticlePage({
 
     const cat = VIDEO_CATEGORIES.find((c) => c.key === a.category);
     const lang = ARTICLE_LANGS.find((l) => l.key === a.language);
-    const paragraphs = a.body.split(/\n{2,}/);
+    const paragraphs: string[] = String(a.body).split(/\n{2,}/);
 
     return (
         <article className="pb-16">
