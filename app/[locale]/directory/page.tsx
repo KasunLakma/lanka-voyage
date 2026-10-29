@@ -32,8 +32,27 @@ export default async function DirectoryPage({
     }
     const { data: listings } = await query;
 
+    // Average star ratings for the listings shown
+    const ratings = new Map<string, { avg: number; count: number }>();
+    if (listings && listings.length > 0) {
+        const { data: stats } = await supabase
+            .from("review_stats")
+            .select("target_id,review_count,avg_rating")
+            .eq("target_type", "listing")
+            .in(
+                "target_id",
+                listings.map((l) => l.id),
+            );
+        (stats ?? []).forEach((s) =>
+            ratings.set(s.target_id, {
+                avg: Number(s.avg_rating),
+                count: s.review_count,
+            }),
+        );
+    }
+
     const chip = (active: boolean) =>
-        `shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${active
+        `shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${active
             ? "bg-ocean-600 text-white"
             : "text-muted hover:bg-ocean-50 hover:text-ocean-700"
         }`;
@@ -42,7 +61,6 @@ export default async function DirectoryPage({
         <Container className="py-12">
             <SectionTitle title={t.directory} subtitle={t.directorySub} />
 
-            {/* Category chips */}
             <div className="mb-8 flex gap-2 overflow-x-auto border-b border-line pb-3">
                 <Link href="/directory" className={chip(!category)}>
                     {t.all}
@@ -61,7 +79,12 @@ export default async function DirectoryPage({
             {listings && listings.length > 0 ? (
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {listings.map((l) => (
-                        <ListingCard key={l.id} listing={l} locale={locale} />
+                        <ListingCard
+                            key={l.id}
+                            listing={l}
+                            locale={locale}
+                            rating={ratings.get(l.id)}
+                        />
                     ))}
                 </div>
             ) : (

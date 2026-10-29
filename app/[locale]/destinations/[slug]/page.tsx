@@ -9,6 +9,7 @@ import {
     UI_TEXT,
     type Locale3,
 } from "@/data/destinations";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 export default async function DestinationPage({
     params,
@@ -138,6 +139,11 @@ export default async function DestinationPage({
                         </p>
                     </div>
                 </div>
+                <ReviewsSection
+                    targetType="destination"
+                    targetId={slug}
+                    locale={locale}
+                />
             </Container>
         </>
     );
