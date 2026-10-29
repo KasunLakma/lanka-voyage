@@ -9,21 +9,38 @@ import { buttonStyles } from "@/components/ui/Button";
 import { AUTH_TEXT } from "@/data/authText";
 import type { Locale3 } from "@/data/destinations";
 
-// Shows "Log in" when signed out, or the user's name and "Log out" when signed in
+// Shows "Log in" when signed out, or name + Admin (for admins) + "Log out" when signed in
 export default function AuthButton() {
     const t = useTranslations("nav");
     const text = AUTH_TEXT[useLocale() as Locale3];
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const supabase = createClient();
-        supabase.auth.getUser().then(({ data }) => setUser(data.user));
+
+        async function load(u: User | null) {
+            setUser(u);
+            if (!u) {
+                setIsAdmin(false);
+                return;
+            }
+            const { data } = await supabase
+                .from("profiles")
+                .select("is_admin")
+                .eq("id", u.id)
+                .maybeSingle();
+            setIsAdmin(Boolean(data?.is_admin));
+        }
+
+        supabase.auth.getUser().then(({ data }) => load(data.user));
 
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
+            // setTimeout avoids a known Supabase deadlock when calling it inside this callback
+            setTimeout(() => load(session?.user ?? null), 0);
         });
         return () => subscription.unsubscribe();
     }, []);
@@ -31,6 +48,7 @@ export default function AuthButton() {
     async function logout() {
         await createClient().auth.signOut();
         setUser(null);
+        setIsAdmin(false);
         router.push("/");
         router.refresh();
     }
@@ -50,6 +68,14 @@ export default function AuthButton() {
 
     return (
         <div className="hidden items-center gap-2 sm:flex">
+            {isAdmin && (
+                <Link
+                    href="/admin"
+                    className="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-gold-400"
+                >
+                    ⚙️ Admin
+                </Link>
+            )}
             <Link
                 href="/account"
                 className="max-w-32 truncate text-sm font-semibold hover:text-ocean-600"

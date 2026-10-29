@@ -7,6 +7,7 @@ import { ADMIN_TEXT } from "@/data/adminText";
 import { VIDEO_CATEGORIES, VIDEO_TEXT } from "@/data/videoText";
 import { youtubeEmbed } from "@/lib/youtube";
 import type { Locale3 } from "@/data/destinations";
+import AdminNav from "@/components/admin/AdminNav";
 
 const STATUSES = ["pending", "published", "rejected"] as const;
 
@@ -70,6 +71,7 @@ export default async function AdminVideosPage({
 
     return (
         <Container className="py-12">
+            <AdminNav />
             <h1 className="text-3xl font-bold">🎬 {vt.title}</h1>
             <p className="mt-3 rounded-xl bg-gold-400/20 px-4 py-3 text-sm">
                 🔎 {vt.rules}

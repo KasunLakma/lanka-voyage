@@ -4,6 +4,7 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { buttonStyles } from "@/components/ui/Button";
 import { PLAN_TEXT, PRICES, LIMITS, type PlanKey } from "@/data/planText";
 import type { Locale3 } from "@/data/destinations";
+import { ARTICLE_TEXT } from "@/data/articleText";
 
 export default async function PricingPage({
     params,
@@ -26,8 +27,8 @@ export default async function PricingPage({
                     <div
                         key={p}
                         className={`flex flex-col rounded-3xl border p-6 shadow-sm ${p === "plus"
-                                ? "border-ocean-600 bg-card ring-2 ring-ocean-600/30"
-                                : "border-line bg-card"
+                            ? "border-ocean-600 bg-card ring-2 ring-ocean-600/30"
+                            : "border-line bg-card"
                             }`}
                     >
                         <h3 className="text-2xl font-bold">{t[p]}</h3>
@@ -63,6 +64,13 @@ export default async function PricingPage({
                             </li>
                             <li>
                                 ✅ {t.listingsN.replace("{n}", String(LIMITS[p].listings))}
+                            </li>
+                            <li>
+                                ✅{" "}
+                                {ARTICLE_TEXT[raw as Locale3].perMonthN.replace(
+                                    "{n}",
+                                    String(LIMITS[p].articles),
+                                )}
                             </li>
                             {soonItems[p].map((s) => (
                                 <li key={s} className="text-muted">

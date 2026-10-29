@@ -8,10 +8,13 @@ export const PRICES = {
     pro: { LKR: 1990, USD: 9 },
 } as const;
 
-export const LIMITS: Record<PlanKey, { videos: number; listings: number }> = {
-    free: { videos: 2, listings: 1 },
-    plus: { videos: 10, listings: 1 },
-    pro: { videos: 50, listings: 5 },
+export const LIMITS: Record<
+    PlanKey,
+    { videos: number; listings: number; articles: number }
+> = {
+    free: { videos: 2, listings: 1, articles: 2 },
+    plus: { videos: 10, listings: 1, articles: 10 },
+    pro: { videos: 50, listings: 5, articles: 50 },
 };
 
 export function totalPrice(

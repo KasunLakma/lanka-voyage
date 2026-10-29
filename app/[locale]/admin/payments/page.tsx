@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ADMIN_TEXT } from "@/data/adminText";
 import { PLAN_TEXT } from "@/data/planText";
 import type { Locale3 } from "@/data/destinations";
+import AdminNav from "@/components/admin/AdminNav";
 
 const STATUSES = ["pending", "approved", "rejected"] as const;
 
@@ -69,6 +70,7 @@ export default async function AdminPaymentsPage({
 
     return (
         <Container className="py-12">
+            <AdminNav />
             <h1 className="text-3xl font-bold">💳 {t.adminTitle}</h1>
             <p className="mt-3 rounded-xl bg-gold-400/20 px-4 py-3 text-sm">
                 🔎 {t.adminHint}
