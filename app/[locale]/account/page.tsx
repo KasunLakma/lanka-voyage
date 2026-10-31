@@ -5,6 +5,8 @@ import UpgradeForm from "@/components/plans/UpgradeForm";
 import { createClient } from "@/lib/supabase/server";
 import { PLAN_TEXT, LIMITS, effectivePlan } from "@/data/planText";
 import type { Locale3 } from "@/data/destinations";
+import MyContent from "@/components/account/MyContent";
+import DeleteAccount from "@/components/account/DeleteAccount";
 
 export default async function AccountPage({
     params,
@@ -112,7 +114,11 @@ export default async function AccountPage({
             <div className="mt-8">
                 <UpgradeForm />
             </div>
-
+            <MyContent
+                userId={user.id}
+                locale={locale}
+                isProvider={profile?.account_type === "provider"}
+            />
             <h2 className="mt-10 text-2xl font-bold">{t.myRequests}</h2>
             {requests && requests.length > 0 ? (
                 <div className="mt-4 grid gap-3">
@@ -148,6 +154,7 @@ export default async function AccountPage({
             ) : (
                 <p className="mt-4 text-muted">{t.noRequests}</p>
             )}
+            <DeleteAccount />
         </Container>
     );
 }
