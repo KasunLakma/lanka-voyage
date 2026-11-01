@@ -40,3 +40,12 @@
   --color-gold-400: #f5c04a;
   --color-gold-500: #e8a317;
 }
+
+/* App-like feel on phones */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  overscroll-behavior-y: none;
+}

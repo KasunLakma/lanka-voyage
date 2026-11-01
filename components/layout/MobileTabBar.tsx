@@ -17,7 +17,7 @@ export default function MobileTabBar() {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed inset-x-4 bottom-4 z-50 flex items-center justify-between rounded-full bg-slate-900/90 p-1.5 shadow-xl backdrop-blur-md lg:hidden">
+        <nav className="fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex items-center justify-between rounded-full bg-slate-900/90 p-1.5 shadow-xl backdrop-blur-md lg:hidden">
             {TABS.map((tab) => {
                 const active = pathname === tab.href;
                 return (
