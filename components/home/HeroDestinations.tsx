@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Locale3 } from "@/data/destinations";
 import { type Dest, destImage, destName } from "@/lib/destinations";
 import DestImage from "./DestImage";
+import HeroSearch from "./HeroSearch";
 
 export default function HeroDestinations({ items }: { items: Dest[] }) {
     const t = useTranslations("hero");
@@ -13,11 +14,12 @@ export default function HeroDestinations({ items }: { items: Dest[] }) {
 
     if (items.length === 0) {
         return (
-            <section className="bg-linear-to-br from-ocean-800 via-ocean-600 to-tea-500 px-4 py-28 text-center text-white">
+            <section className="relative bg-linear-to-br from-ocean-800 via-ocean-600 to-tea-500 px-4 pb-32 pt-28 text-center text-white">
                 <h1 className="text-4xl font-extrabold sm:text-6xl">{t("title")}</h1>
                 <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90">
                     {t("subtitle")}
                 </p>
+                <HeroSearch />
             </section>
         );
     }
@@ -65,17 +67,7 @@ export default function HeroDestinations({ items }: { items: Dest[] }) {
                 {t("subtitle")}
             </p>
 
-            <div className="absolute inset-x-4 bottom-8 mx-auto flex max-w-3xl items-center gap-2 rounded-full border border-white/40 bg-white/15 p-2 backdrop-blur-md">
-                <span className="pl-3 text-lg">🔍</span>
-                <input
-                    type="text"
-                    placeholder={t("searchPlaceholder")}
-                    className="min-w-0 flex-1 bg-transparent px-2 py-2 text-white outline-none placeholder:text-white/70"
-                />
-                <button className="rounded-full bg-gold-500 px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-gold-400">
-                    {t("searchButton")}
-                </button>
-            </div>
+            <HeroSearch />
         </section>
     );
 }

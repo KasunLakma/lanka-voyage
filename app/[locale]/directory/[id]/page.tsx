@@ -8,6 +8,7 @@ import { CATEGORIES, LIST_TEXT } from "@/data/listingText";
 import { REVIEW_TEXT } from "@/data/reviewText";
 import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
+import StickyContact from "@/components/directory/StickyContact";
 
 export default async function ListingPage({
     params,
@@ -34,7 +35,8 @@ export default async function ListingPage({
     const digits = String(l.phone).replace(/\D/g, "");
 
     return (
-        <article className="pb-16">
+        <article className="pb-52 lg:pb-16">
+
             {l.image_path ? (
                 <div className="relative h-64 w-full overflow-hidden sm:h-96">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -121,6 +123,15 @@ export default async function ListingPage({
                     ownerId={l.owner_id}
                 />
             </Container>
+            <StickyContact
+                phone={String(l.phone)}
+                whatsapp={Boolean(l.whatsapp)}
+                lat={l.lat}
+                lng={l.lng}
+                callLabel={t.call}
+                whatsappLabel={t.whatsapp}
+                mapLabel={rt.openMap}
+            />
         </article>
     );
 }
