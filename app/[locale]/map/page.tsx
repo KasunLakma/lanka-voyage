@@ -3,8 +3,8 @@ import Container from "@/components/ui/Container";
 import SectionTitle from "@/components/ui/SectionTitle";
 import MapView, { type Pin } from "@/components/map/MapView";
 import { createClient } from "@/lib/supabase/server";
-import { DESTINATIONS, type Locale3 } from "@/data/destinations";
-import { COORDS } from "@/data/coords";
+import { fetchDestinations, destName } from "@/lib/destinations";
+import type { Locale3 } from "@/data/destinations";
 import { CATEGORIES } from "@/data/listingText";
 import { MAP_TEXT } from "@/data/mapText";
 
@@ -19,26 +19,29 @@ export default async function MapPage({
     const tc = await getTranslations("categories");
 
     const supabase = await createClient();
-    const { data } = await supabase
-        .from("listings")
-        .select("id,name,category,district,phone,lat,lng")
-        .eq("status", "published")
-        .not("lat", "is", null)
-        .not("lng", "is", null);
+    const [dests, listingsRes] = await Promise.all([
+        fetchDestinations(supabase),
+        supabase
+            .from("listings")
+            .select("id,name,category,district,phone,lat,lng")
+            .eq("status", "published")
+            .not("lat", "is", null)
+            .not("lng", "is", null),
+    ]);
 
     const pins: Pin[] = [
-        ...DESTINATIONS.map((d) => ({
+        ...dests.map((d) => ({
             id: `d-${d.slug}`,
             kind: "destination" as const,
             category: d.category,
-            lng: COORDS[d.slug][0],
-            lat: COORDS[d.slug][1],
-            title: d.name[locale],
+            lng: d.lng,
+            lat: d.lat,
+            title: destName(d, locale),
             subtitle: tc(d.category),
             icon: "📍",
             href: `/destinations/${d.slug}`,
         })),
-        ...(data ?? []).map((l) => {
+        ...(listingsRes.data ?? []).map((l) => {
             const cat = CATEGORIES.find((c) => c.key === l.category);
             return {
                 id: `l-${l.id}`,
@@ -54,7 +57,6 @@ export default async function MapPage({
         }),
     ];
 
-    // Filter buttons: only categories that actually have a listing on the map
     const usedCategories = CATEGORIES.filter((c) =>
         pins.some((p) => p.kind === "listing" && p.category === c.key),
     );
