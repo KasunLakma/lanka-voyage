@@ -15,7 +15,37 @@ import {
     destSummary,
 } from "@/lib/destinations";
 import { UI_TEXT, type Locale3 } from "@/data/destinations";
+import type { Metadata } from "next";
+import { clip, pageAlternates } from "@/lib/seo";
 
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+    const { locale: raw, slug } = await params;
+    const locale = raw as Locale3;
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("destinations")
+        .select(`${DEST_COLUMNS},published`)
+        .eq("slug", slug)
+        .maybeSingle();
+    if (!data) return {};
+    const d = data as unknown as Dest & { published: boolean };
+    const description = clip(destSummary(d, locale));
+    return {
+        title: destName(d, locale),
+        description,
+        alternates: pageAlternates(locale, `/destinations/${slug}`),
+        robots: { index: d.published },
+        openGraph: {
+            title: destName(d, locale),
+            description,
+            images: [destImage(d.image)],
+        },
+    };
+}
 export default async function DestinationPage({
     params,
 }: {

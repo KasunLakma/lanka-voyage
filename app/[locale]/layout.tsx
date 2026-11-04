@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { OG_LOCALE, SITE_NAME, SITE_URL } from "@/lib/site";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MobileTabBar from "@/components/layout/MobileTabBar";
@@ -18,7 +19,6 @@ const sinhala = Noto_Sans_Sinhala({
 });
 const tamil = Noto_Sans_Tamil({ subsets: ["tamil"], variable: "--font-tamil" });
 
-// Colour of the phone's browser/status bar
 export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
@@ -37,16 +37,26 @@ export async function generateMetadata({
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "meta" });
     return {
-        title: t("title"),
+        metadataBase: new URL(SITE_URL),
+        title: { default: t("title"), template: `%s | ${SITE_NAME}` },
         description: t("description"),
-        applicationName: "Lanka Voyage",
+        applicationName: SITE_NAME,
         appleWebApp: {
             capable: true,
-            title: "Lanka Voyage",
+            title: SITE_NAME,
             statusBarStyle: "default",
         },
         icons: { apple: "/icons/apple-touch-icon.png" },
         formatDetection: { telephone: false },
+        openGraph: {
+            type: "website",
+            siteName: SITE_NAME,
+            title: t("title"),
+            description: t("description"),
+            locale: OG_LOCALE[locale as keyof typeof OG_LOCALE] ?? "en_US",
+            images: ["/images/sigiriya.jpg"],
+        },
+        twitter: { card: "summary_large_image" },
     };
 }
 

@@ -7,7 +7,35 @@ import { ARTICLE_TEXT, ARTICLE_LANGS } from "@/data/articleText";
 import { VIDEO_CATEGORIES } from "@/data/videoText";
 import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
+import type { Metadata } from "next";
+import { clip, pageAlternates } from "@/lib/seo";
 
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+    const { locale, id } = await params;
+    const supabase = await createClient();
+    const { data: a } = await supabase
+        .from("articles")
+        .select("title,summary,image_path,status")
+        .eq("id", id)
+        .maybeSingle();
+    if (!a) return {};
+    return {
+        title: a.title,
+        description: clip(a.summary),
+        alternates: pageAlternates(locale, `/articles/${id}`),
+        robots: { index: a.status === "published" },
+        openGraph: {
+            type: "article",
+            title: a.title,
+            description: clip(a.summary),
+            images: a.image_path ? [listingImageUrl(a.image_path)] : undefined,
+        },
+    };
+}
 export default async function ArticlePage({
     params,
 }: {

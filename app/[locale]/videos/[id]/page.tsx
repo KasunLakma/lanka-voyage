@@ -2,11 +2,38 @@ import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import Container from "@/components/ui/Container";
 import { createClient } from "@/lib/supabase/server";
-import { youtubeEmbed } from "@/lib/youtube";
+import { youtubeEmbed, youtubeThumb } from "@/lib/youtube";
 import { VIDEO_CATEGORIES, VIDEO_TEXT } from "@/data/videoText";
 import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
+import type { Metadata } from "next";
+import { clip, pageAlternates } from "@/lib/seo";
 
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+    const { locale, id } = await params;
+    const supabase = await createClient();
+    const { data: v } = await supabase
+        .from("videos")
+        .select("title,description,youtube_id,status")
+        .eq("id", id)
+        .maybeSingle();
+    if (!v) return {};
+    return {
+        title: v.title,
+        description: clip(v.description) || v.title,
+        alternates: pageAlternates(locale, `/videos/${id}`),
+        robots: { index: v.status === "published" },
+        openGraph: {
+            title: v.title,
+            description: clip(v.description) || v.title,
+            images: [youtubeThumb(v.youtube_id)],
+        },
+    };
+}
 export default async function VideoPage({
     params,
 }: {

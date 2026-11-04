@@ -9,7 +9,34 @@ import { REVIEW_TEXT } from "@/data/reviewText";
 import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
 import StickyContact from "@/components/directory/StickyContact";
+import type { Metadata } from "next";
+import { clip, pageAlternates } from "@/lib/seo";
 
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+    const { locale, id } = await params;
+    const supabase = await createClient();
+    const { data: l } = await supabase
+        .from("listings")
+        .select("name,description,image_path,status")
+        .eq("id", id)
+        .maybeSingle();
+    if (!l) return {};
+    return {
+        title: l.name,
+        description: clip(l.description),
+        alternates: pageAlternates(locale, `/directory/${id}`),
+        robots: { index: l.status === "published" },
+        openGraph: {
+            title: l.name,
+            description: clip(l.description),
+            images: l.image_path ? [listingImageUrl(l.image_path)] : undefined,
+        },
+    };
+}
 export default async function ListingPage({
     params,
 }: {
