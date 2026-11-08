@@ -9,6 +9,7 @@ import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
 import type { Metadata } from "next";
 import { clip, pageAlternates } from "@/lib/seo";
+import SaveButton from "@/components/saved/SaveButton";
 
 export async function generateMetadata({
     params,
@@ -98,6 +99,9 @@ export default async function ArticlePage({
                     {t.by} {a.author_name} ·{" "}
                     {new Date(a.created_at).toLocaleDateString()}
                 </p>
+                <div className="mt-4">
+                    <SaveButton targetType="article" targetId={id} />
+                </div>
                 <p className="mt-5 text-xl font-medium text-muted">{a.summary}</p>
 
                 <div className="mt-6">

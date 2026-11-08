@@ -7,6 +7,7 @@ import { PLAN_TEXT, LIMITS, effectivePlan } from "@/data/planText";
 import type { Locale3 } from "@/data/destinations";
 import MyContent from "@/components/account/MyContent";
 import DeleteAccount from "@/components/account/DeleteAccount";
+import { SAVED_TEXT } from "@/data/savedText";
 
 export default async function AccountPage({
     params,
@@ -71,6 +72,12 @@ export default async function AccountPage({
     return (
         <Container className="max-w-3xl py-12">
             <h1 className="text-3xl font-bold">{t.account}</h1>
+            <Link
+                href="/saved"
+                className="mt-2 inline-block text-sm font-semibold text-ocean-700 underline"
+            >
+                ♥ {SAVED_TEXT[locale].title}
+            </Link>
             <p className="mt-1 text-muted">
                 {profile?.full_name} · {user.email}
             </p>

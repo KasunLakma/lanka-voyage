@@ -11,6 +11,7 @@ import ReportButton from "@/components/reviews/ReportButton";
 import StickyContact from "@/components/directory/StickyContact";
 import type { Metadata } from "next";
 import { clip, pageAlternates } from "@/lib/seo";
+import SaveButton from "@/components/saved/SaveButton";
 
 export async function generateMetadata({
     params,
@@ -107,6 +108,9 @@ export default async function ListingPage({
                     </p>
                 )}
 
+                <div className="mt-4">
+                    <SaveButton targetType="listing" targetId={l.id} />
+                </div>
                 <h2 className="mt-8 text-xl font-bold">{rt.about}</h2>
                 <p className="mt-2 whitespace-pre-line text-lg leading-relaxed">
                     {l.description}

@@ -17,6 +17,7 @@ import {
 import { UI_TEXT, type Locale3 } from "@/data/destinations";
 import type { Metadata } from "next";
 import { clip, pageAlternates } from "@/lib/seo";
+import SaveButton from "@/components/saved/SaveButton";
 
 export async function generateMetadata({
     params,
@@ -95,6 +96,13 @@ export default async function DestinationPage({
                 <h1 className="absolute bottom-10 left-4 text-6xl font-extrabold drop-shadow-lg sm:left-10 sm:text-8xl">
                     {name}
                 </h1>
+                <div className="absolute right-4 top-6 sm:right-10">
+                    <SaveButton
+                        targetType="destination"
+                        targetId={slug}
+                        variant="overlay"
+                    />
+                </div>
             </section>
 
             <Container className="py-12">

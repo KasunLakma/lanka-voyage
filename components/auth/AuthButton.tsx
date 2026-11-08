@@ -7,12 +7,14 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { buttonStyles } from "@/components/ui/Button";
 import { AUTH_TEXT } from "@/data/authText";
+import { SAVED_TEXT } from "@/data/savedText";
 import type { Locale3 } from "@/data/destinations";
 
-// Shows "Log in" when signed out, or name + Admin (for admins) + "Log out" when signed in
 export default function AuthButton() {
     const t = useTranslations("nav");
-    const text = AUTH_TEXT[useLocale() as Locale3];
+    const locale = useLocale() as Locale3;
+    const text = AUTH_TEXT[locale];
+    const savedLabel = SAVED_TEXT[locale].title;
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -39,7 +41,6 @@ export default function AuthButton() {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            // setTimeout avoids a known Supabase deadlock when calling it inside this callback
             setTimeout(() => load(session?.user ?? null), 0);
         });
         return () => subscription.unsubscribe();
@@ -71,11 +72,19 @@ export default function AuthButton() {
             {isAdmin && (
                 <Link
                     href="/admin"
-                    className="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-gold-400"
+                    className="whitespace-nowrap rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-gold-400"
                 >
                     ⚙️ Admin
                 </Link>
             )}
+            <Link
+                href="/saved"
+                aria-label={savedLabel}
+                title={savedLabel}
+                className="text-xl text-red-500 hover:scale-110"
+            >
+                ♥
+            </Link>
             <Link
                 href="/account"
                 className="max-w-32 truncate text-sm font-semibold hover:text-ocean-600"

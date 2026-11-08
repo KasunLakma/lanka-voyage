@@ -8,6 +8,7 @@ import type { Locale3 } from "@/data/destinations";
 import ReportButton from "@/components/reviews/ReportButton";
 import type { Metadata } from "next";
 import { clip, pageAlternates } from "@/lib/seo";
+import SaveButton from "@/components/saved/SaveButton";
 
 export async function generateMetadata({
     params,
@@ -71,6 +72,9 @@ export default async function VideoPage({
             </div>
 
             <h1 className="mt-6 text-3xl font-bold">{video.title}</h1>
+            <div className="mt-3">
+                <SaveButton targetType="video" targetId={id} />
+            </div>
             <p className="mt-2 text-muted">
                 {cat?.icon} {cat?.label[locale]} · 📍 {video.district}
             </p>
