@@ -26,6 +26,8 @@
   --color-line: var(--line);
   --font-sans: var(--font-inter), var(--font-sinhala), var(--font-tamil),
     system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-sinhala), var(--font-tamil),
+    system-ui, sans-serif;
 }
 
 @theme {
@@ -39,6 +41,10 @@
   --color-tea-500: #5fa84a;
   --color-gold-400: #f5c04a;
   --color-gold-500: #e8a317;
+  --color-lagoon-900: #001f26;
+  --color-lagoon-800: #06323d;
+  --color-sun: #fde910;
+  --color-lime: #a4e891;
 }
 
 /* App-like feel on phones */

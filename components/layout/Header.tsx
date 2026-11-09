@@ -3,10 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import Container from "@/components/ui/Container";
-import { buttonStyles } from "@/components/ui/Button";
-import LanguageSwitcher from "./LanguageSwitcher";
 import AuthButton from "@/components/auth/AuthButton";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const NAV_ITEMS = [
     "destinations",
@@ -23,18 +21,21 @@ export default function Header() {
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 z-50 border-b border-line bg-surface/90 backdrop-blur">
-            <Container className="flex h-16 items-center justify-between gap-3">
-                <Link href="/" className="text-xl font-bold text-ocean-700">
-                    🌴 Lanka Voyage
+        <header className="sticky top-0 z-50 px-3 pt-3">
+            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 rounded-full border border-white/40 bg-card/80 px-4 shadow-lg backdrop-blur-xl sm:px-6">
+                <Link
+                    href="/"
+                    className="whitespace-nowrap font-display text-sm font-extrabold tracking-wide text-ink"
+                >
+                    🌴 LANKA VOYAGE
                 </Link>
 
-                <nav className="hidden items-center gap-5 lg:flex">
+                <nav className="hidden items-center gap-5 xl:flex">
                     {NAV_ITEMS.map((item) => (
                         <Link
                             key={item}
                             href={`/${item}`}
-                            className="text-sm font-medium text-ink hover:text-ocean-600"
+                            className="whitespace-nowrap text-sm font-medium text-ink hover:text-ocean-600"
                         >
                             {t(item)}
                         </Link>
@@ -45,29 +46,27 @@ export default function Header() {
                     <LanguageSwitcher />
                     <AuthButton />
                     <button
-                        className="rounded-lg border border-line bg-card px-3 py-2 lg:hidden"
+                        className="rounded-full border border-line bg-card px-3 py-2 xl:hidden"
                         onClick={() => setOpen(!open)}
                         aria-label="Menu"
                     >
                         {open ? "✕" : "☰"}
                     </button>
                 </div>
-            </Container>
+            </div>
 
             {open && (
-                <nav className="border-t border-line bg-surface lg:hidden">
-                    <Container className="flex flex-col py-2">
-                        {[...NAV_ITEMS, "login", "register"].map((item) => (
-                            <Link
-                                key={item}
-                                href={`/${item}`}
-                                onClick={() => setOpen(false)}
-                                className="py-3 text-base font-medium text-ink"
-                            >
-                                {t(item)}
-                            </Link>
-                        ))}
-                    </Container>
+                <nav className="absolute left-3 right-3 top-[4.9rem] mx-auto flex max-w-7xl flex-col rounded-3xl border border-line bg-card/95 p-3 shadow-xl backdrop-blur-xl xl:hidden">
+                    {[...NAV_ITEMS, "login", "register"].map((item) => (
+                        <Link
+                            key={item}
+                            href={`/${item}`}
+                            onClick={() => setOpen(false)}
+                            className="rounded-xl px-4 py-3 text-base font-medium text-ink hover:bg-ocean-50"
+                        >
+                            {t(item)}
+                        </Link>
+                    ))}
                 </nav>
             )}
         </header>

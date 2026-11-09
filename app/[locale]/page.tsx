@@ -4,12 +4,15 @@ import Container from "@/components/ui/Container";
 import SectionTitle from "@/components/ui/SectionTitle";
 import { Link } from "@/i18n/navigation";
 import { buttonStyles } from "@/components/ui/Button";
-import HeroDestinations from "@/components/home/HeroDestinations";
+import Hero from "@/components/landing/Hero";
+import IslandMap from "@/components/landing/IslandMap";
+import StatsBand from "@/components/landing/StatsBand";
 import DestinationExplorer from "@/components/home/DestinationExplorer";
 import { createClient } from "@/lib/supabase/server";
-import { fetchDestinations } from "@/lib/destinations";
+import { destImage, destName, fetchDestinations } from "@/lib/destinations";
 import { youtubeThumb } from "@/lib/youtube";
 import { listingImageUrl } from "@/lib/images";
+import { LANDING_TEXT } from "@/data/landingText";
 import { COMMUNITY_TEXT, type Locale3 } from "@/data/destinations";
 
 export default async function HomePage({
@@ -21,33 +24,72 @@ export default async function HomePage({
     const locale = raw as Locale3;
     const ts = await getTranslations("sections");
     const tn = await getTranslations("nav");
+    const lt = LANDING_TEXT[locale];
     const community = COMMUNITY_TEXT[locale];
 
     const supabase = await createClient();
-    const [dests, videosRes, articlesRes] = await Promise.all([
-        fetchDestinations(supabase),
-        supabase
-            .from("videos")
-            .select("id,youtube_id,title")
-            .eq("status", "published")
-            .order("created_at", { ascending: false })
-            .limit(3),
-        supabase
-            .from("articles")
-            .select("id,title,summary,image_path")
-            .eq("status", "published")
-            .order("created_at", { ascending: false })
-            .limit(3),
-    ]);
+    const [dests, videosRes, articlesRes, listingsCount, videosCount, articlesCount] =
+        await Promise.all([
+            fetchDestinations(supabase),
+            supabase
+                .from("videos")
+                .select("id,youtube_id,title")
+                .eq("status", "published")
+                .order("created_at", { ascending: false })
+                .limit(3),
+            supabase
+                .from("articles")
+                .select("id,title,summary,image_path")
+                .eq("status", "published")
+                .order("created_at", { ascending: false })
+                .limit(3),
+            supabase
+                .from("listings")
+                .select("id", { count: "exact", head: true })
+                .eq("status", "published"),
+            supabase
+                .from("videos")
+                .select("id", { count: "exact", head: true })
+                .eq("status", "published"),
+            supabase
+                .from("articles")
+                .select("id", { count: "exact", head: true })
+                .eq("status", "published"),
+        ]);
     const videos = videosRes.data ?? [];
     const articles = articlesRes.data ?? [];
+    const businesses = listingsCount.count ?? 0;
 
     return (
         <>
-            <HeroDestinations items={dests} />
+            <Hero
+                images={dests.map((d) => ({ src: destImage(d.image), alt: d.name_en }))}
+                destinations={dests.length}
+                businesses={businesses}
+            />
+
+            <IslandMap
+                pins={dests.map((d) => ({
+                    slug: d.slug,
+                    name: destName(d, locale),
+                    lat: d.lat,
+                    lng: d.lng,
+                }))}
+                title={lt.mapTitle}
+                note={lt.mapNote}
+            />
+
+            <StatsBand
+                items={[
+                    { value: dests.length, label: lt.stats[0] },
+                    { value: businesses, label: lt.stats[1] },
+                    { value: videosCount.count ?? 0, label: lt.stats[2] },
+                    { value: articlesCount.count ?? 0, label: lt.stats[3] },
+                ]}
+            />
 
             {dests.length > 0 && (
-                <Container className="mt-14">
+                <Container className="mt-8">
                     <SectionTitle title={ts("featuredDestinations")} />
                     <DestinationExplorer items={dests} />
                 </Container>
@@ -64,13 +106,13 @@ export default async function HomePage({
                     />
                     <div className="absolute inset-0 bg-linear-to-r from-black/70 to-black/10" />
                     <div className="relative max-w-xl">
-                        <h2 className="text-4xl font-extrabold sm:text-6xl">
+                        <h2 className="font-display text-3xl font-extrabold sm:text-5xl">
                             {community.title}
                         </h2>
                         <p className="mt-3 text-lg text-white/90">{community.sub}</p>
                         <Link
                             href="/register"
-                            className={`${buttonStyles("primary")} mt-6 bg-white! text-slate-900!`}
+                            className="mt-6 inline-flex rounded-full bg-sun px-7 py-3.5 text-sm font-bold text-lagoon-900 hover:brightness-95"
                         >
                             {tn("register")}
                         </Link>
@@ -144,9 +186,7 @@ export default async function HomePage({
                                 )}
                                 <div className="p-4">
                                     <p className="line-clamp-2 font-bold">{a.title}</p>
-                                    <p className="mt-1 line-clamp-2 text-sm text-muted">
-                                        {a.summary}
-                                    </p>
+                                    <p className="mt-1 line-clamp-2 text-sm text-muted">{a.summary}</p>
                                 </div>
                             </Link>
                         ))}

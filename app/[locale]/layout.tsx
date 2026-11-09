@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Sinhala, Noto_Sans_Tamil } from "next/font/google";
+import {
+    Inter,
+    Noto_Sans_Sinhala,
+    Noto_Sans_Tamil,
+    Unbounded,
+} from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -18,6 +23,7 @@ const sinhala = Noto_Sans_Sinhala({
     variable: "--font-sinhala",
 });
 const tamil = Noto_Sans_Tamil({ subsets: ["tamil"], variable: "--font-tamil" });
+const display = Unbounded({ subsets: ["latin"], variable: "--font-unbounded" });
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -73,7 +79,7 @@ export default async function LocaleLayout({
     return (
         <html
             lang={locale}
-            className={`${inter.variable} ${sinhala.variable} ${tamil.variable}`}
+            className={`${inter.variable} ${sinhala.variable} ${tamil.variable} ${display.variable}`}
         >
             <body className="min-h-screen bg-surface text-ink antialiased">
                 <NextIntlClientProvider>
