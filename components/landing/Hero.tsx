@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import DestImage from "@/components/home/DestImage";
@@ -8,60 +7,69 @@ import { LANDING_TEXT } from "@/data/landingText";
 import type { Locale3 } from "@/data/destinations";
 
 export default function Hero({
-    images,
+    image,
+    front,
+    tone,
     destinations,
     businesses,
 }: {
-    images: { src: string; alt: string }[];
+    image: { src: string; alt: string };
+    front?: string | null; // optional cut-out of the foreground (gives the "letters behind the mountain" depth)
+    tone: "dark" | "white"; // colour of the giant letters
     destinations: number;
     businesses: number;
 }) {
     const t = LANDING_TEXT[useLocale() as Locale3];
-    const [active, setActive] = useState(0);
-
-    // Slowly change the background photo (not for people who prefer less motion)
-    useEffect(() => {
-        if (images.length < 2) return;
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        const id = setInterval(() => setActive((x) => (x + 1) % images.length), 6000);
-        return () => clearInterval(id);
-    }, [images.length]);
-
+    const dark = tone === "dark";
     const chip = t.chip
         .replace("{d}", String(destinations))
         .replace("{b}", String(businesses));
 
     return (
-        <section className="relative -mt-[76px] flex min-h-[92vh] items-center overflow-hidden bg-lagoon-900 text-white">
-            {images.map((img, i) => (
-                <div
-                    key={img.src}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${i === active ? "opacity-100" : "opacity-0"
-                        }`}
-                >
-                    <DestImage
-                        src={img.src}
-                        alt={img.alt}
-                        priority={i === 0}
-                        className="object-cover"
-                    />
+        <section className="relative -mt-[76px] min-h-svh overflow-hidden bg-lagoon-900 text-white">
+            {/* 1) background photo */}
+            <DestImage
+                src={image.src}
+                alt={image.alt}
+                priority
+                className="object-cover"
+            />
+            <div
+                className={`absolute inset-0 ${dark
+                        ? "bg-linear-to-b from-white/20 via-transparent to-black/45"
+                        : "bg-linear-to-b from-black/45 via-black/5 to-black/70"
+                    }`}
+            />
+
+            {/* 2) giant title (edge to edge) */}
+            <h1
+                className={`absolute inset-x-0 top-[20vh] z-10 px-3 text-center font-display text-[24vw] font-bold leading-[0.9] tracking-tight sm:top-[17vh] sm:text-[13vw] ${dark ? "text-lagoon-900" : "text-white drop-shadow-2xl"
+                    }`}
+            >
+                {t.bigLines.map((line, i) => (
+                    <span key={i} className="block sm:mr-[0.22em] sm:inline">
+                        {line}
+                    </span>
+                ))}
+            </h1>
+
+            {/* 3) foreground cut-out ABOVE the title: the letters look like they are behind it */}
+            {front && (
+                <div className="pointer-events-none absolute inset-0 z-20">
+                    <DestImage src={front} alt="" className="object-cover" />
                 </div>
-            ))}
-            <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/10 to-black/70" />
+            )}
 
-            <div className="relative mx-auto w-full max-w-7xl px-4 pb-44 pt-32 sm:px-6">
-                <h1 className="font-display text-[19vw] font-extrabold leading-[0.95] tracking-tight drop-shadow-2xl sm:text-[10vw]">
-                    {t.bigLines.map((line, i) => (
-                        <span key={i} className="block sm:mr-[0.25em] sm:inline">
-                            {line}
-                        </span>
-                    ))}
-                </h1>
-
-                <p className="mt-6 max-w-xl text-2xl font-semibold sm:text-3xl">{t.tag1}</p>
-                <p className="mt-2 max-w-xl text-base text-white/85 sm:text-lg">{t.tag2}</p>
-
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+            {/* 4) text and buttons, bottom-left */}
+            <div className="absolute inset-x-0 bottom-0 z-30 mx-auto max-w-7xl px-4 pb-24 sm:px-6 sm:pb-28">
+                <p className="mb-3 inline-flex rounded-full bg-white/20 px-4 py-2 text-sm backdrop-blur-sm">
+                    {chip}
+                </p>
+                <p className="max-w-xl text-2xl font-semibold sm:text-3xl">{t.tag1}</p>
+                <p className="mt-2 max-w-xl text-base text-white/90 sm:text-lg">
+                    {t.tag2}
+                </p>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
                     <Link
                         href="/destinations"
                         className="rounded-full bg-sun px-7 py-3.5 text-sm font-bold text-lagoon-900 transition hover:brightness-95"
@@ -75,17 +83,14 @@ export default function Hero({
                         {t.cta2}
                     </Link>
                 </div>
-                <p className="mt-5 inline-flex rounded-full bg-white/15 px-4 py-2 text-sm backdrop-blur-sm">
-                    {chip}
-                </p>
             </div>
 
-            {/* Jagged "mountain" edge into the dark section */}
+            {/* jagged edge into the dark section */}
             <svg
                 aria-hidden
                 viewBox="0 0 1440 120"
                 preserveAspectRatio="none"
-                className="absolute inset-x-0 bottom-0 h-16 w-full fill-lagoon-900 sm:h-24"
+                className="absolute inset-x-0 bottom-0 z-40 h-16 w-full fill-lagoon-900 sm:h-24"
             >
                 <path d="M0 120V70L200 36L470 76L770 14L1070 70L1310 34L1440 58V120Z" />
             </svg>

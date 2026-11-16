@@ -15,6 +15,12 @@ import { listingImageUrl } from "@/lib/images";
 import { LANDING_TEXT } from "@/data/landingText";
 import { COMMUNITY_TEXT, type Locale3 } from "@/data/destinations";
 
+// Hero settings: change these to try other photos / colours
+const HERO = {
+    src: "/images/sigiriya.jpg", // later: "/images/hero.jpg"
+    front: null as string | null, // later: "/images/hero-front.png" (the cut-out)
+    tone: "white" as "white" | "dark", // "dark" only on a LIGHT, misty photo
+};
 export default async function HomePage({
     params,
 }: {
@@ -63,7 +69,9 @@ export default async function HomePage({
     return (
         <>
             <Hero
-                images={dests.map((d) => ({ src: destImage(d.image), alt: d.name_en }))}
+                image={{ src: HERO.src, alt: "Sri Lanka" }}
+                front={HERO.front}
+                tone={HERO.tone}
                 destinations={dests.length}
                 businesses={businesses}
             />
